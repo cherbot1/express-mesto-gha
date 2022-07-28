@@ -6,7 +6,7 @@ const INTERNAL_SERVER_ERROR = 500;
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then(cards => res.send({ data: cards }))
+    .then((cards) => res.send({ data: cards }))
     .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
 };
 
@@ -28,21 +28,22 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) =>{
+    .then((card) => {
       if (!card) {
         res.send('Карточки не существует');
-        return;
       } else {
-        res.send({data:card});
+        res.send({ data: card });
       }
     })
     .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
 };
 
 module.exports.addLike = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId,
+  Card.findByIdAndUpdate(
+    req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true })
+    { new: true },
+  )
     .then((card) => {
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Карточки не существует' });
@@ -54,9 +55,11 @@ module.exports.addLike = (req, res) => {
 };
 
 module.exports.removeLike = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId,
+  Card.findByIdAndUpdate(
+    req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true })
+    { new: true },
+  )
     .then((card) => {
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Карточки не существует' });

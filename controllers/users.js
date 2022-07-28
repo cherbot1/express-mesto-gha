@@ -6,7 +6,7 @@ const INTERNAL_SERVER_ERROR = 500;
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then(users => res.send({ data: users }))
+    .then((users) => res.send({ data: users }))
     .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
 };
 
@@ -26,12 +26,11 @@ module.exports.createUser = (req, res) => {
 
 module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) =>{
+    .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: `Пользователь не найден` });
-        return;
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
       } else {
-        res.send({data:user});
+        res.send({ data: user });
       }
     })
     .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
