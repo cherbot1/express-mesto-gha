@@ -30,12 +30,19 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.send('Карточки не существует');
+        res.status(NOT_FOUND).send('Карточки не существует');
       } else {
         res.send({ data: card });
       }
     })
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(BAD_REQUEST).send({ message: `Некорректный запрос: ${err.message}` });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+    });
 };
 
 module.exports.addLike = (req, res) => {
