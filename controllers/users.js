@@ -33,14 +33,21 @@ module.exports.getUserId = (req, res) => {
         res.send({ data: user });
       }
     })
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(BAD_REQUEST).send({ message: `Некорректный запрос: ${err.message}` });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+    });
 };
 
 module.exports.updateUser = (req, res) => {
   const userId = req.user._id;
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(userId, { name, about })
+  User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .then(() => res.send({ name, about }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
