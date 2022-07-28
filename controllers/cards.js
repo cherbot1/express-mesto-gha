@@ -51,7 +51,14 @@ module.exports.addLike = (req, res) => {
         res.send({ data: card });
       }
     })
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(BAD_REQUEST).send({ message: `Некорректный запрос: ${err.message}` });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+    });
 };
 
 module.exports.removeLike = (req, res) => {
@@ -67,5 +74,12 @@ module.exports.removeLike = (req, res) => {
         res.send({ data: card });
       }
     })
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(BAD_REQUEST).send({ message: `Некорректный запрос: ${err.message}` });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+    });
 };
