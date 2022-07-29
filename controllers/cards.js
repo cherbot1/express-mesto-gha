@@ -1,13 +1,14 @@
 const Card = require('../models/card');
-
-const BAD_REQUEST = 400;
-const NOT_FOUND = 404;
-const INTERNAL_SERVER_ERROR = 500;
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+} = require('../utils/errors');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` }));
+    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -19,10 +20,10 @@ module.exports.createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(BAD_REQUEST).send({ message: `Некорректный запрос: ${err.message}` });
+          .status(BAD_REQUEST).send({ message: 'Некорректный запрос' });
       }
       return res
-        .status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+        .status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -38,10 +39,10 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(BAD_REQUEST).send({ message: `Некорректный запрос: ${err.message}` });
+          .status(BAD_REQUEST).send({ message: 'Некорректный запрос' });
       }
       return res
-        .status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+        .status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -61,10 +62,10 @@ module.exports.addLike = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(BAD_REQUEST).send({ message: `Некорректный запрос: ${err.message}` });
+          .status(BAD_REQUEST).send({ message: 'Некорректный запрос' });
       }
       return res
-        .status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+        .status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -84,9 +85,9 @@ module.exports.removeLike = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(BAD_REQUEST).send({ message: `Некорректный запрос: ${err.message}` });
+          .status(BAD_REQUEST).send({ message: 'Некорректный запрос' });
       }
       return res
-        .status(INTERNAL_SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+        .status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
     });
 };

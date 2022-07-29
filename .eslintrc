@@ -1,26 +1,10 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
   "extends": [
-    "airbnb-base",
-    "eslint:recommended",
-    "plugin:react/recommended"
-  ],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": "latest",
-    "sourceType": "module"
-  },
-  "plugins": [
-    "react"
+    "airbnb-base"
   ],
   "rules": {
     "no-underscore-dangle": ["error", { "allow": ["_id"] }],
-    "eol-last": 0,
-    "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }]
+    "eol-last": 0, /* Для исключения ошибки при проверке app */
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }] /* Для исключения ошибки при проверке app */
   }
 }

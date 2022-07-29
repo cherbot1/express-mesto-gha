@@ -1,10 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const {
+  NOT_FOUND,
+} = require('./utils/errors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-const NOT_FOUND = 404;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
