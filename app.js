@@ -1,9 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { NotFoundError } = require('./utils/errors/NotFoundErr');
+const auth = require('./middlewares/auth');
+const {
+  createUser,
+  login,
+} = require('./controllers/users');
 const {
   NOT_FOUND,
-} = require('./utils/errors');
+} = require('./utils/errorCodes');
+
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -16,20 +23,13 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62e2273f047a5126ed21db5f',
-  };
+app.use('/cards', auth, require('./routes/cards'));
+app.use('/users', auth, require('./routes/users'));
+app.post('/signin', login);
+app.post('/signup', createUser);
 
-  next();
-});
-
-app.use('/cards', require('./routes/cards'));
-app.use('/users', require('./routes/users'));
-
-app.use('/', (req, res) => {
-  res
-    .status(NOT_FOUND).send({ message: 'Страницы не существует' });
+app.use('/^', (req, res) => {
+  throw new NotFoundError('Страницы не существует');
 });
 
 app.listen(PORT);
