@@ -1,7 +1,8 @@
 const { INTERNAL_SERVER_ERROR } = require('../utils/errorCodes');
 
-app.use((err, req, res, next) => {
+module.exports = ((err, req, res, next) => {
   const { statusCode = INTERNAL_SERVER_ERROR, message } = err;
-  res.status(statusCode).send({ message: statusCode === INTERNAL_SERVER_ERROR ? 'На сервере произошла ошибка' : message });
+
+  res.status(statusCode).send({ message: statusCode === INTERNAL_SERVER_ERROR ? 'Ошибка сервера' : message });
   next();
 });
