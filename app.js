@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
 const NotFoundError = require('./utils/errors/NotFoundErr');
 const auth = require('./middlewares/auth');
@@ -56,6 +57,8 @@ app.post('/signup', celebrate({
 app.use('/^', () => {
   throw new NotFoundError('Страницы не существует');
 });
+
+app.use(errors());
 
 app.use(error);
 
