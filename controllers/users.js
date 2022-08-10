@@ -85,20 +85,27 @@ module.exports.getUserId = (req, res, next) => {
       }
       res.send({ data: user });
     })
-    .catch(next)
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Некорректный запрос'));
+      }
+      next(err);
+    });
 };
 
 module.exports.updateUser = (req, res, next) => {
   const userId = req.user._id;
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(userId, { name, about }, {
+    new: true,
+    runValidators: true
+  })
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
-      } else {
-        res.send({ name, about });
       }
+      res.send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -112,13 +119,15 @@ module.exports.updateUserAvatar = (req, res, next) => {
   const userId = req.user._id;
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(userId, { avatar })
+  User.findByIdAndUpdate(userId, { avatar }, {
+    new: true,
+    runValidators: true
+  })
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
-      } else {
-        res.send({ avatar });
       }
+      res.send({ avatar });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
