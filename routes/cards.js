@@ -28,7 +28,7 @@ router.post('/', celebrate({
     link: Joi.string()
       .required()
       .pattern(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
-  }).unknown(true),
+  }),
 }), createCard);
 
 router.put('/:cardId/likes',  celebrate({

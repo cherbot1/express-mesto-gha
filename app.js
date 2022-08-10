@@ -52,7 +52,7 @@ app.post('/signup', celebrate({
       .required(),
     avatar: Joi.string()
       .pattern(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
-  }).unknown(true),
+  }),
 }), createUser);
 
 app.use(errors());
