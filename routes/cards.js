@@ -10,7 +10,13 @@ const {
 } = require('../controllers/cards');
 
 router.get('/', getCards);
-router.delete('/:cardId', deleteCard);
+router.delete('/:cardId', celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string()
+      .alphanum()
+      .length(24),
+  }),
+}), deleteCard);
 
 router.post('/', celebrate({
   body: Joi.object().keys({
@@ -25,7 +31,19 @@ router.post('/', celebrate({
   }).unknown(true),
 }), createCard);
 
-router.put('/:cardId/likes', addLike);
-router.delete('/:cardId/likes', removeLike);
+router.put('/:cardId/likes',  celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string()
+      .alphanum()
+      .length(24),
+  }),
+}), addLike);
+router.delete('/:cardId/likes',  celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string()
+      .alphanum()
+      .length(24),
+  }),
+}), removeLike);
 
 module.exports = router;

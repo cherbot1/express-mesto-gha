@@ -15,18 +15,20 @@ module.exports.login = (req, res, next) => {
       if (!user) {
         throw new UnauthorizedError('Неверные логин или пароль');
       }
-      const token = jwt.sign({ _id: user._id }, 'totally-unbreakable-secret-key');
+      const token = jwt.sign(
+        { _id: user._id },
+        'totally-unbreakable-secret-key',
+        { expiresIn: '7d' }
+      );
 
-      res.send({ token });
+      res.send({ jwt: token });
     })
     .catch(next);
 };
 
 /* Поиск текущего пользователя */
 module.exports.getCurrentUser = (req, res, next) => {
-  const { _id } = req.user;
-
-  User.find({ _id })
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
@@ -54,8 +56,16 @@ module.exports.createUser = (req, res, next) => {
       avatar,
       email,
       password: hash,
-    })
-      .then((user) => res.send({ data: user }))
+    }))
+      .then((user) => {
+        res.send({
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        })
+      })
       .catch((err) => {
         if (err.name === 'ValidationError') {
           throw new BadRequestError('Некорректный запрос');
@@ -64,8 +74,7 @@ module.exports.createUser = (req, res, next) => {
           throw new ConflictError('Такой пользователь уже существует');
         }
         next(err);
-      })
-    )
+      });
 };
 
 module.exports.getUserId = (req, res, next) => {
