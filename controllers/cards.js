@@ -4,19 +4,19 @@ const BadRequestError = require('../utils/errors/BadRequestErr');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
-  const owner = req.user._id;
-  const { name, link } = req.body;
+  /* const owner = req.user._id; ?? */
+  const { name, link, owner = req.user._id } = req.body;
 
   Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError('Некорректный запрос');
+        next(new BadRequestError('Некорректный запрос'));
       }
       next(err);
     })
@@ -26,13 +26,13 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточки не существует');
+        next(new NotFoundError('Карточки не существует'));
       }
-      res.send({ data: card });
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Некорректный запрос');
+        next(new BadRequestError('Некорректный запрос'));
       }
       next(err);
     })
