@@ -67,11 +67,11 @@ module.exports.createUser = (req, res, next) => {
         })
       })
       .catch((err) => {
-        if (err.name === 'ValidationError') {
-          throw new BadRequestError('Некорректный запрос');
+        if (err.name === 'ValidationError' || err.name === 'CastError') {
+          next(new BadRequestError('Некорректный запрос'));
         }
         if (err.code === 11000) {
-          throw new ConflictError('Такой пользователь уже существует');
+          next(new ConflictError('Такой пользователь уже существует'));
         }
         next(err);
       });
@@ -81,17 +81,11 @@ module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
-      } else {
-        res.send({ data: user });
+        next(new NotFoundError('Пользователь не найден'));
       }
+      res.send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new BadRequestError('Некорректный запрос');
-      }
-      next(err);
-    })
+    .catch(next)
 };
 
 module.exports.updateUser = (req, res, next) => {
