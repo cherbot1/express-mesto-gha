@@ -34,6 +34,7 @@ app.post('/signin', celebrate({
       .required(),
   }).unknown(true),
 }), login);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string()
@@ -50,7 +51,7 @@ app.post('/signup', celebrate({
     password: Joi.string()
       .required(),
     avatar: Joi.string()
-      .regex(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
+      .pattern(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
   }).unknown(true),
 }), createUser);
 
