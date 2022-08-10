@@ -54,11 +54,11 @@ app.post('/signup', celebrate({
   }).unknown(true),
 }), createUser);
 
+app.use(errors());
+
 app.use('/^', () => {
   throw new NotFoundError('Страницы не существует');
 });
-
-app.use(errors());
 
 app.use(error);
 

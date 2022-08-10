@@ -65,7 +65,6 @@ module.exports.createUser = (req, res, next) => {
         }
         next(err);
       })
-      .catch(next));
 };
 
 module.exports.getUserId = (req, res, next) => {
@@ -83,7 +82,6 @@ module.exports.getUserId = (req, res, next) => {
       }
       next(err);
     })
-    .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -104,7 +102,6 @@ module.exports.updateUser = (req, res, next) => {
       }
       next(err);
     })
-    .catch(next);
 };
 
 module.exports.updateUserAvatar = (req, res, next) => {
@@ -125,5 +122,4 @@ module.exports.updateUserAvatar = (req, res, next) => {
       }
       next(err);
     })
-    .catch(next);
 };

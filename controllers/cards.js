@@ -20,7 +20,6 @@ module.exports.createCard = (req, res, next) => {
       }
       next(err);
     })
-    .catch(next);
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -37,7 +36,6 @@ module.exports.deleteCard = (req, res, next) => {
       }
       next(err);
     })
-    .catch(next);
 };
 
 module.exports.addLike = (req, res, next) => {
@@ -58,7 +56,6 @@ module.exports.addLike = (req, res, next) => {
       }
       next(err);
     })
-    .catch(next);
 };
 
 module.exports.removeLike = (req, res, next) => {
@@ -79,5 +76,4 @@ module.exports.removeLike = (req, res, next) => {
       }
       next(err);
     })
-    .catch(next);
 };
