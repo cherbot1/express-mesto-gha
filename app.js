@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const NotFoundError = require('./utils/errors/NotFoundErr');
 const auth = require('./middlewares/auth');
+const error = require('./middlewares/error')
 const {
   createUser,
   login,
@@ -55,5 +56,7 @@ app.post('/signup', celebrate({
 app.use('/^', () => {
   throw new NotFoundError('Страницы не существует');
 });
+
+app.use(error);
 
 app.listen(PORT);
