@@ -1,7 +1,7 @@
 {
   "name": "express-mesto-gha",
   "version": "1.0.0",
-  "description": "Проект Mesto фронтенд + бэкенд https://github.com/cherbot1/express-mesto-gha/",
+  "description": "[![Tests for sprint 14](https://github.com/cherbot1/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/cherbot1/express-mesto-gha/actions/workflows/tests-14-sprint.yml)",
   "main": "app.js",
   "scripts": {
     "lint": "npx eslint .",
@@ -23,11 +23,13 @@
     "eslint": "^8.20.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "eslint-plugin-regex": "1.9.1"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
+    "celebrate": "^15.0.1",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.0",

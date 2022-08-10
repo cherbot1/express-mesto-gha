@@ -29,7 +29,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточки не существует');
       }
-        res.send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -50,7 +50,7 @@ module.exports.addLike = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточки не существует');
       }
-        res.send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -71,7 +71,7 @@ module.exports.removeLike = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточки не существует');
       }
-        res.send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {

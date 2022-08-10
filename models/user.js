@@ -26,14 +26,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Обязательное поле'],
     unique: true,
-    validate: [validator.isEmail, 'Некорректный email']
+    validate: [validator.isEmail, 'Некорректный email'],
 
   },
   password: {
     type: String,
     required: true,
     select: false,
-  }
+  },
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {

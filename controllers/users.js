@@ -1,6 +1,6 @@
-const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const User = require('../models/user');
 const { UnauthorizedError } = require('../utils/errors/UnauthorizedErr');
 const { NotFoundError } = require('../utils/errors/NotFoundErr');
 const { BadRequestError } = require('../utils/errors/BadRequestErr');
@@ -28,10 +28,10 @@ module.exports.getCurrentUser = (req, res, next) => {
 
   User.find({ _id })
     .then((user) => {
-      if(!user) {
-      throw new NotFoundError('Пользователь не найден');
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
       }
-      res.send({ data: user })
+      res.send({ data: user });
     })
     .catch(next);
 };
@@ -43,16 +43,18 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
   bcrypt.hash(password, 10)
-    .then(hash => User.create({
+    .then((hash) => User.create({
       name,
       about,
       avatar,
       email,
       password: hash,
-      })
+    })
       .then((user) => res.send({ data: user }))
       .catch((err) => {
         if (err.name === 'ValidationError') {
@@ -63,8 +65,7 @@ module.exports.createUser = (req, res, next) => {
         }
         next(err);
       })
-      .catch(next)
-    )
+      .catch(next));
 };
 
 module.exports.getUserId = (req, res, next) => {
@@ -82,7 +83,7 @@ module.exports.getUserId = (req, res, next) => {
       }
       next(err);
     })
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
