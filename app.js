@@ -22,9 +22,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.use('/cards', auth, require('./routes/cards'));
-app.use('/users', auth, require('./routes/users'));
-
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string()
@@ -41,11 +38,9 @@ app.post('/signup', celebrate({
       .required()
       .email(),
     name: Joi.string()
-      .alphanum()
       .min(3)
       .max(30),
     about: Joi.string()
-      .alphanum()
       .min(3)
       .max(30),
     password: Joi.string()
@@ -55,10 +50,15 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+app.use(auth);
+
+app.use('/cards', require('./routes/cards'));
+app.use('/users', require('./routes/users'));
+
 app.use(errors());
 
-app.use('/^', () => {
-  throw new NotFoundError('Страницы не существует');
+app.use('/^', (req, res, next) => {
+  next(new NotFoundError('Страницы не существует'));
 });
 
 app.use(error);
