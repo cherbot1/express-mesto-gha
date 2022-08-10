@@ -36,7 +36,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({ data: users }))
+    .then((users) => res.send({ users }))
     .catch(next);
 };
 
@@ -60,7 +60,7 @@ module.exports.createUser = (req, res, next) => {
           avatar: user.avatar,
           email: user.email,
           _id: user._id,
-        })
+        });
       })
       .catch((err) => {
         if (err.name === 'ValidationError' || err.name === 'CastError') {
