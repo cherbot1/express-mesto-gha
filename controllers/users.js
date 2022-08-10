@@ -95,14 +95,14 @@ module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        next(new NotFoundError('Пользователь не найден'));
       } else {
         res.send({ name, about });
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError('Некорректный запрос');
+        next(new BadRequestError('Некорректный запрос'));
       }
       next(err);
     })
@@ -115,14 +115,14 @@ module.exports.updateUserAvatar = (req, res, next) => {
   User.findByIdAndUpdate(userId, { avatar })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        next(new NotFoundError('Пользователь не найден'));
       } else {
         res.send({ avatar });
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError('Некорректный запрос');
+        next(new BadRequestError('Некорректный запрос'));
       }
       next(err);
     })
