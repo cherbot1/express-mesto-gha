@@ -28,7 +28,7 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-const deleteCard = (req, res, next) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
       throw new NotFoundError('Карточка с указанным _id не найдена');
