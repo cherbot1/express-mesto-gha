@@ -53,16 +53,15 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) =>
+    .then((user) => {
       res.send({
-        data: {
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
-          email: user.email,
-          _id: user._id,
-        }
-      }))
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user._id,
+      });
+    })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError('Некорректный запрос именно здесь'));
