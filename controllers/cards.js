@@ -6,7 +6,7 @@ const ConflictError = require('../utils/errors/ConflictErr');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
-      res.send(cards);
+      res.status(200).send(cards);
     })
     .catch(next);
 };

@@ -5,7 +5,7 @@ const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
 const NotFoundError = require('./utils/errors/NotFoundErr');
 const auth = require('./middlewares/auth');
-const error = require('./middlewares/error')
+const error = require('./middlewares/error');
 const {
   createUser,
   login,
