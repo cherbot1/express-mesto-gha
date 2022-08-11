@@ -3,18 +3,19 @@ const mongoose = require('mongoose');
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Обязательное поле'],
-    minlength: [2, 'Минимум 2 символа, Вы ввели {VALUE}'],
-    maxlength: [30, 'Максимум 30 символов, Вы ввели {VALUE}'],
+    required: true,
+    minlength: 2,
+    maxlength: 30,
   },
   link: {
     type: String,
-    required: [true, 'Обязательное поле'],
+    required: true,
+    validate: /^http(?:s)?\:\/\/(?:w{3}\.)?[0-9a-z-]*\.[a-z]{2}(?:[a-z-._~:\/?#\[\]@!$&'()*+,;=]*)?/,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: [true, 'Обязательное поле'],
+    required: true,
   },
   likes: [
     {
