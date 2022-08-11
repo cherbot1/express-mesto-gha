@@ -1,10 +1,13 @@
 const Card = require('../models/card');
 const NotFoundError = require('../utils/errors/NotFoundErr');
 const BadRequestError = require('../utils/errors/BadRequestErr');
+const ConflictError = require('../utils/errors/ConflictErr');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send(cards))
+    .then((cards) => {
+      res.send(cards);
+    })
     .catch(next);
 };
 
@@ -13,22 +16,32 @@ module.exports.createCard = (req, res, next) => {
   const { name, link, owner = req.user._id } = req.body;
 
   Card.create({ name, link, owner })
-    .then((card) => res.send(card))
+    .then((card) => {
+      res.send(card)
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректный запрос'));
+        return;
       }
       next(err);
     })
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
+      if (!card.owner.equals(req.user._id)) {
+        next(new ConflictError('Данная карточка создана не Вами'));
+        return;
+      }
       if (!card) {
         next(new NotFoundError('Карточки не существует'));
       }
-      res.send(card);
+      return Card.deleteOne(card)
+        .then(() => {
+          res.send(card);
+        })
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -46,13 +59,13 @@ module.exports.addLike = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточки не существует');
+        next(new NotFoundError('Карточки не существует'));
       }
       res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Некорректный запрос');
+        next(new BadRequestError('Некорректный запрос'));
       }
       next(err);
     })

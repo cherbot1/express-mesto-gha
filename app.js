@@ -55,11 +55,11 @@ app.use(auth);
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
 
-app.use(errors());
-
 app.use((req, res, next) => {
   next(new NotFoundError('Страницы не существует'));
 });
+
+app.use(errors());
 
 app.use(error);
 
