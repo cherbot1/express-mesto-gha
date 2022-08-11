@@ -28,30 +28,21 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-module.exports.deleteCard = (req, res, next) => {
+const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
-      throw new NotFoundError('Карточки не существует');
+      throw new NotFoundError('Карточка с указанным _id не найдена');
     })
     .then((card) => {
-      if (req.user._id !== card.owner.id.valueOf()) {
-        return next(new ForbiddenError('Карточка создана другим пользователем, удалить невозможно'));
+      if (!card.owner.equals(req.user._id)) {
+        return next(new ForbiddenError('Нельзя удалить карточку, которая была создана не Вами'));
       }
       return Card.deleteOne(card)
         .then(() => {
           res.send(card);
         });
     })
-    .then((card) => {
-      res.send({ card });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректный запрос'));
-        return;
-      }
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.addLike = (req, res, next) => {
