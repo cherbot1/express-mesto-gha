@@ -82,6 +82,7 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.getUserId = (req, res, next) => {
   const { userId } = req.params;
+
   User.findById(userId)
     .then((user) => {
       if (!user) {
