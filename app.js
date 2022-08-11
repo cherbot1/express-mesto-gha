@@ -32,12 +32,20 @@ app.post('/signin', celebrate({
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(3).max(30),
-    about: Joi.string().min(3).max(30),
-    avatar: Joi.string().pattern(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
+    name: Joi.string()
+      .min(3)
+      .max(30),
+    about: Joi.string()
+      .min(3)
+      .max(30),
+    avatar: Joi.string()
+      .pattern(/^http(?:s)?\:\/\/(?:w{3}\.)?[0-9a-z-]*\.[a-z]{2}(?:[a-z-._~:\/?#\[\]@!$&'()*+,;=]*)?/),
+    email: Joi.string()
+      .email()
+      .required(),
+    password: Joi.string()
+      .required(),
+  }).unknown(true),
 }), createUser);
 
 app.use(auth);
