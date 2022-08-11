@@ -35,8 +35,7 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .then((card) => {
       if (!card.owner.equals(req.user._id)) {
-        next(new ForbiddenError('Данная карточка создана не Вами'));
-        return;
+        return next(new ForbiddenError('Карточка создана не Вами'));
       }
       return Card.deleteOne(card)
         .then(() => {
