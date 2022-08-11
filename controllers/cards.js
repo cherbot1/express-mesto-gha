@@ -2,6 +2,7 @@ const Card = require('../models/card');
 const NotFoundError = require('../utils/errors/NotFoundErr');
 const BadRequestError = require('../utils/errors/BadRequestErr');
 const ForbiddenError = require('../utils/errors/ForbiddenErr');
+const InternalServerError = require('../utils/errors/InternalServerErr');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -29,18 +30,18 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
-    .orFail(() => {
-      throw new NotFoundError('Карточки не существует');
-    })
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      if (req.user._id !== card.owner._id.valueOf()) {
-        return next(new ForbiddenError('Карточка создана другим пользователем, удалить невозможно'));
+      const ownerId = card.owner.id;
+      const userId = req.user._id;
+
+      if (!card) {
+        throw new NotFoundError('Карточки не существует');
+      } else if (ownerId !== userId) {
+        throw new ForbiddenError('Карточка создана другим пользователем, удалить невозможно');
+      } else {
+        res.send({ card });
       }
-      return Card.remove();
-    })
-    .then((card) => {
-      res.send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
