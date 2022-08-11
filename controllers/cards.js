@@ -34,13 +34,13 @@ module.exports.deleteCard = (req, res, next) => {
       throw new NotFoundError('Карточки не существует');
     })
     .then((card) => {
-      const ownerId = card.owner.id;
-      const userId = req.user._id;
-
-      if (userId !== ownerId) {
+      if (req.user._id !== card.owner._id.valueOf()) {
         return next(new ForbiddenError('Карточка создана другим пользователем, удалить невозможно'));
       }
-      return Card.remove();
+      return Card.deleteOne(card)
+        .then(() => {
+          res.send(card);
+        });
     })
     .then((card) => {
       res.send({ card });
