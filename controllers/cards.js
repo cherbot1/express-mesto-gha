@@ -34,15 +34,21 @@ module.exports.deleteCard = (req, res, next) => {
       throw new NotFoundError('Карточки не существует');
     })
     .then((card) => {
-      if (!card.owner.equals(req.user._id)) {
-        return next(new ForbiddenError('Карточка создана не Вами'));
+      if (req.user._id !== card.owner._id.valueOf()) {
+        return next(new ForbiddenError('Карточка создана другим пользователем, удалить невозможно'));
       }
-      return Card.deleteOne(card)
-        .then(() => {
-          res.send(card);
-        })
+      return Card.remove();
     })
-    .catch(next);
+    .then((card) => {
+      res.send({ card });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Некорректный запрос'));
+        return;
+      }
+      next(err);
+    });
 };
 
 module.exports.addLike = (req, res, next) => {
