@@ -28,15 +28,9 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
       }
-      return res.send({ user });
+      return res.status(200).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректный запрос'));
-        return;
-      }
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.getUsers = (req, res, next) => {
