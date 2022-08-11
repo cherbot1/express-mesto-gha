@@ -45,14 +45,13 @@ app.post('/signup', celebrate({
       .required(),
     password: Joi.string()
       .required(),
-  }).unknown(true),
+  })
 }), createUser);
 
 app.use(auth);
 
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
-
 app.use((req, res, next) => {
   next(new NotFoundError('Страницы не существует'));
 });
