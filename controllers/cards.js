@@ -42,12 +42,7 @@ module.exports.deleteCard = (req, res, next) => {
           res.send(card);
         })
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректный запрос'));
-      }
-      next(err);
-    })
+    .catch(next);
 };
 
 module.exports.addLike = (req, res, next) => {
