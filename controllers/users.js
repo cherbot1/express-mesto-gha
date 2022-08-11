@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const UnauthorizedError = require('../utils/errors/UnauthorizedErr');
 const NotFoundError = require('../utils/errors/NotFoundErr');
 const BadRequestError = require('../utils/errors/BadRequestErr');
 const ConflictError = require('../utils/errors/ConflictErr');
@@ -15,7 +14,7 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign(
         { _id: user._id },
         'totally-unbreakable-secret-key',
-        { expiresIn: '7d' }
+        { expiresIn: '7d' },
       );
       res.send({ jwt: token });
     })
@@ -29,7 +28,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
       }
-      res.send({ user });
+      return res.send({ user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -102,7 +101,7 @@ module.exports.updateUser = (req, res, next) => {
 
   User.findByIdAndUpdate(userId, { name, about }, {
     new: true,
-    runValidators: true
+    runValidators: true,
   })
     .then((user) => {
       if (!user) {
@@ -115,7 +114,7 @@ module.exports.updateUser = (req, res, next) => {
         next(new BadRequestError('Некорректный запрос'));
       }
       next(err);
-    })
+    });
 };
 
 module.exports.updateUserAvatar = (req, res, next) => {
@@ -124,7 +123,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
 
   User.findByIdAndUpdate(userId, { avatar }, {
     new: true,
-    runValidators: true
+    runValidators: true,
   })
     .then((user) => {
       if (!user) {
@@ -137,5 +136,5 @@ module.exports.updateUserAvatar = (req, res, next) => {
         next(new BadRequestError('Некорректный запрос'));
       }
       next(err);
-    })
+    });
 };

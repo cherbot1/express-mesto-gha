@@ -17,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
 
   Card.create({ name, link, owner })
     .then((card) => {
-      res.send(card)
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -25,7 +25,7 @@ module.exports.createCard = (req, res, next) => {
         return;
       }
       next(err);
-    })
+    });
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -68,7 +68,7 @@ module.exports.addLike = (req, res, next) => {
         next(new BadRequestError('Некорректный запрос'));
       }
       next(err);
-    })
+    });
 };
 
 module.exports.removeLike = (req, res, next) => {
@@ -88,5 +88,5 @@ module.exports.removeLike = (req, res, next) => {
         throw new BadRequestError('Некорректный запрос');
       }
       next(err);
-    })
+    });
 };

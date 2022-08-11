@@ -4,7 +4,7 @@ module.exports = ((err, req, res, next) => {
   res.status(statusCode).send({
     message: statusCode === 500
       ? 'Ошибка сервера'
-      : message
+      : message,
   });
   next();
 });
