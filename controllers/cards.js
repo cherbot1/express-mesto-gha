@@ -30,13 +30,13 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError('Карточки не существует');
+    })
     .then((card) => {
       if (!card.owner.equals(req.user._id)) {
         next(new ConflictError('Данная карточка создана не Вами'));
         return;
-      }
-      if (!card) {
-        next(new NotFoundError('Карточки не существует'));
       }
       return Card.deleteOne(card)
         .then(() => {
