@@ -13,7 +13,8 @@ router.get('/', getCards);
 router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string()
-      .length(24),
+      .length(24)
+      .hex(),
   }),
 }), deleteCard);
 
