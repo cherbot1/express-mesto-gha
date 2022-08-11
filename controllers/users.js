@@ -53,24 +53,27 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-      .then((user) => {
-        res.send({
+    .then((user) =>
+      res.send({
+        data: {
           name: user.name,
           about: user.about,
           avatar: user.avatar,
           email: user.email,
           _id: user._id,
-        });
-      })
-      .catch((err) => {
-        if (err.name === 'ValidationError' || err.name === 'CastError') {
-          next(new BadRequestError('Некорректный запрос'));
         }
-        if (err.code === 11000) {
-          next(new ConflictError('Такой пользователь уже существует'));
-        }
-        next(err);
-      });
+      }))
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new BadRequestError('Некорректный запрос именно здесь'));
+        return;
+      }
+      if (err.code === 11000) {
+        next(new ConflictError('Такой пользователь уже существует'));
+        return;
+      }
+      next(err);
+    });
 };
 
 module.exports.getUserId = (req, res, next) => {

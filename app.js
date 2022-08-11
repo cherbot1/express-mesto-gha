@@ -12,12 +12,10 @@ const {
 } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
-const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect('mongodb://localhost:27017/mestodb');
+
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,19 +32,11 @@ app.post('/signin', celebrate({
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
-    email: Joi.string()
-      .required()
-      .email(),
-    name: Joi.string()
-      .min(3)
-      .max(30),
-    about: Joi.string()
-      .min(3)
-      .max(30),
-    password: Joi.string()
-      .required(),
-    avatar: Joi.string()
-      .pattern(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
   }),
 }), createUser);
 
