@@ -4,6 +4,10 @@ const User = require('../models/user');
 const NotFoundError = require('../utils/errors/NotFoundErr');
 const BadRequestError = require('../utils/errors/BadRequestErr');
 const ConflictError = require('../utils/errors/ConflictErr');
+const {
+  OK,
+  CREATED,
+} = require('../utils/statuses/statuses');
 
 /* Логин */
 module.exports.login = (req, res, next) => {
@@ -16,7 +20,7 @@ module.exports.login = (req, res, next) => {
         'totally-unbreakable-secret-key',
         { expiresIn: '7d' },
       );
-      res.send({ jwt: token });
+      res.status(OK).send({ jwt: token });
     })
     .catch(next);
 };
@@ -30,7 +34,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       }
-      res.status(200).send({ data: user });
+      res.status(OK).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -43,7 +47,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({ users }))
+    .then((users) => res.status(OK).send({ users }))
     .catch(next);
 };
 
@@ -61,7 +65,7 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
     }))
     .then((user) => {
-      res.send({
+      res.status(CREATED).send({
         name: user.name,
         about: user.about,
         avatar: user.avatar,
@@ -90,7 +94,7 @@ module.exports.getUserId = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       }
-      res.send({ user });
+      res.status(OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -113,7 +117,7 @@ module.exports.updateUser = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
       }
-      res.send({ user });
+      res.status(OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -135,7 +139,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
       }
-      res.send({ avatar });
+      res.status(OK).send({ avatar });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

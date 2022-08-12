@@ -2,11 +2,15 @@ const Card = require('../models/card');
 const NotFoundError = require('../utils/errors/NotFoundErr');
 const BadRequestError = require('../utils/errors/BadRequestErr');
 const ForbiddenError = require('../utils/errors/ForbiddenErr');
+const {
+  OK,
+  CREATED,
+} = require('../utils/statuses/statuses');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
-      res.status(200).send(cards);
+      res.status(OK).send({ cards });
     })
     .catch(next);
 };
@@ -17,7 +21,7 @@ module.exports.createCard = (req, res, next) => {
 
   Card.create({ name, link, owner })
     .then((card) => {
-      res.send(card);
+      res.status(CREATED).send({ card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -39,7 +43,7 @@ module.exports.deleteCard = (req, res, next) => {
       }
       return Card.deleteOne(card)
         .then(() => {
-          res.send(card);
+          res.status(OK).send({ card });
         });
     })
     .catch(next);
@@ -55,7 +59,7 @@ module.exports.addLike = (req, res, next) => {
       if (!card) {
         next(new NotFoundError('Карточки не существует'));
       }
-      res.send({ card });
+      res.status(OK).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -75,7 +79,7 @@ module.exports.removeLike = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточки не существует');
       }
-      res.send({ card });
+      res.status(OK).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
