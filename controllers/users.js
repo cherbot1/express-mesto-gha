@@ -34,7 +34,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
       }
-      return res.status(OK).send({ user });
+      return res.status(OK).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -48,16 +48,18 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
-      res.status(OK).send(users);
+      res.status(OK).send({ data: users });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, email, password,
+    name,
+    about,
+    avatar,
+    email,
+    password,
   } = req.body;
 
   bcrypt.hash(password, 10)
@@ -70,11 +72,13 @@ module.exports.createUser = (req, res, next) => {
     }))
     .then((user) => {
       res.status(CREATED).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-        _id: user._id,
+        data: {
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        },
       });
     })
     .catch((err) => {
@@ -115,7 +119,7 @@ module.exports.updateUser = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
       }
-      res.status(OK).send({ user });
+      res.status(OK).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -137,7 +141,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
       }
-      res.status(OK).send({ avatar });
+      res.status(OK).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
