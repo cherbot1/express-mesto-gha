@@ -23,14 +23,22 @@ module.exports.login = (req, res, next) => {
 
 /* Поиск текущего пользователя */
 module.exports.getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
+  const { userId } = req.params;
+
+  User.findById(userId)
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError('Пользователь не найден'));
+        throw new NotFoundError('Пользователь не найден');
       }
-      return res.status(200).send(user);
+      res.status(200).send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Некорректный запрос'));
+        return;
+      }
+      next(err);
+    });
 };
 
 module.exports.getUsers = (req, res, next) => {
