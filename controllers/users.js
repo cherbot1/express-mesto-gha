@@ -32,7 +32,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Пользователь с указанным _id не найден'));
       }
-      return res.status(OK).send(user);
+      return res.status(OK).send({ data: user });
     })
     .catch(next);
 };
