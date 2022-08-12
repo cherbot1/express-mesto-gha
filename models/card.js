@@ -10,7 +10,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    validate: /^http(?:s)?\:\/\/(?:w{3}\.)?[0-9a-z-]*\.[a-z]{2}(?:[a-z-._~:\/?#\[\]@!$&'()*+,;=]*)?/,
+    validate: /^http(s)?\:\/\/(w{3}\.)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$*/,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

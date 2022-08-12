@@ -41,7 +41,7 @@ app.post('/signup', celebrate({
       .min(2)
       .max(30),
     avatar: Joi.string()
-      .pattern(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
+      .pattern(/^http(s)?\:\/\/(w{3}\.)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$*/),
     email: Joi.string()
       .email()
       .required(),
