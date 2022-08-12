@@ -27,20 +27,11 @@ module.exports.login = (req, res, next) => {
 
 /* Поиск текущего пользователя */
 module.exports.getCurrentUser = (req, res, next) => {
-  const { userId } = req.params;
+  const { _id } = req.user;
 
-  User.findById(userId)
-    .orFail(() => {
-      throw new NotFoundError('Пользователь не найден');
-    })
+  User.findById(_id)
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректный запрос'));
-        return;
-      }
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.getUsers = (req, res, next) => {
