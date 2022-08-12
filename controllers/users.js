@@ -34,7 +34,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       }
-      res.status(OK).send({ data: user });
+      res.status(OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -47,8 +47,12 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(OK).send({ users }))
-    .catch(next);
+    .then((users) => {
+      res.status(OK).send(users)
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -87,14 +91,14 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getUserId = (req, res, next) => {
-  const { userId } = req.params;
+  const { _id } = req.user;
 
-  User.findById(userId)
+  User.findById(_id)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       }
-      res.status(OK).send({ user });
+      res.status(OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
