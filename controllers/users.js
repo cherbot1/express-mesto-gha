@@ -27,10 +27,12 @@ module.exports.login = (req, res, next) => {
 
 /* Поиск текущего пользователя */
 module.exports.getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
+  const { _id } = req.user;
+
+  User.findById(_id)
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError('Пользователь с указанным _id не найден'));
+        return next(new NotFoundError('Пользователь не найден'));
       }
       return res.status(OK).send({ data: user });
     })
@@ -72,12 +74,10 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('К сожалению, переданы некорректные данные при создании пользователя.'));
-        return;
+        next(new BadRequestError('Некорректный запрос'));
       }
       if (err.code === 11000) {
-        next(new ConflictError('К сожалению, пользователь c таким email уже существует.'));
-        return;
+        next(new ConflictError('Пользователь уже существует'));
       }
       next(err);
     });
@@ -89,7 +89,7 @@ module.exports.getUserId = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        next(new NotFoundError('Пользователь не найден'));
       }
       res.status(OK).send({ data: user });
     })
