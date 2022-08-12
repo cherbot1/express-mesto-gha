@@ -17,7 +17,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        'totally-unbreakable-secret-key',
+        'key',
         { expiresIn: '7d' },
       );
       res.status(OK).send({ jwt: token });
@@ -61,7 +61,6 @@ module.exports.createUser = (req, res, next) => {
     email,
     password,
   } = req.body;
-
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name,
@@ -70,24 +69,22 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => {
-      res.status(CREATED).send({
-        data: {
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
-          email: user.email,
-          _id: user._id,
-        },
-      });
-    })
+    .then((user) => res.send({
+      data: {
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user._id,
+      },
+    }))
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequestError('Некорректный запрос'));
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('К сожалению, переданы некорректные данные при создании пользователя.'));
         return;
       }
       if (err.code === 11000) {
-        next(new ConflictError('Такой пользователь уже существует'));
+        next(new ConflictError('К сожалению, пользователь c таким email уже существует.'));
         return;
       }
       next(err);
