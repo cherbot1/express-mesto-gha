@@ -32,9 +32,9 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(_id)
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError('Пользователь не найден'));
+        next(new NotFoundError('Пользователь не найден'));
       }
-      return res.status(OK).send({ data: user });
+      res.status(OK).send({ data: user });
     })
     .catch(next);
 };
