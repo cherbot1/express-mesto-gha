@@ -29,14 +29,14 @@ router.patch('/me', celebrate({
     about: Joi.string()
       .min(3)
       .max(30),
-  })
+  }),
 }), updateUser);
 
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi.string()
       .required()
-      .pattern(/^http(?:s)?\:\/\/(?:w{3}\.)?[0-9a-z-]*\.[a-z]{2}(?:[a-z-._~:\/?#\[\]@!$&'()*+,;=]*)?/),
+      .pattern(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
   }),
 }), updateUserAvatar);
 
