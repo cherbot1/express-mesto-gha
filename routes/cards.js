@@ -25,7 +25,7 @@ router.post('/', celebrate({
       .max(30),
     link: Joi.string()
       .required()
-      .pattern(/^http(s)?:\/\/(w{3}\.)?[0-9a-z\-._~:\/?#[\]@!$&'()*+,;=]+#?$/),
+      .pattern(/^http(s)?:\/\/(w{3}\.)?([da-z\-]+\.)+([\w#!:.?+=&%\-])?/),
   }),
 }), createCard);
 
