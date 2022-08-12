@@ -30,12 +30,10 @@ module.exports.getCurrentUser = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .then((user) => {
-      if (!user) {
-        return next(new NotFoundError('Пользователь не найден'));
-      }
-      return res.status(OK).send({ data: user });
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
     })
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Некорректный запрос'));
