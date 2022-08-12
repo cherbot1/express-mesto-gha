@@ -40,7 +40,7 @@ module.exports.deleteCard = (req, res, next) => {
       throw new NotFoundError('Карточки не существует');
     })
     .then((card) => {
-      if (req.user._id !== card.owner.id) {
+      if (req.user._id !== card.owner) {
         return next(new ForbiddenError('Карточка создана не Вами, удалить невозможно'));
       }
       return Card.deleteOne(card)
