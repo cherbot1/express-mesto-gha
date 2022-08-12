@@ -32,9 +32,9 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        return next(new NotFoundError('Пользователь не найден'));
       }
-      res.status(OK).send({ user });
+      return res.status(OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -98,15 +98,9 @@ module.exports.getUserId = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       }
-      res.status(OK).send({ user });
+      res.status(OK).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректный запрос'));
-        return;
-      }
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
