@@ -27,7 +27,7 @@ router.patch('/me', celebrate({
     about: Joi.string()
       .min(3)
       .max(30),
-  }).unknown(true),
+  })
 }), updateUser);
 
 router.patch('/me/avatar', celebrate({

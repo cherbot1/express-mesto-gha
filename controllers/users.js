@@ -48,7 +48,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
-      res.status(OK).send(users)
+      res.status(OK).send(users);
     })
     .catch((err) => {
       next(err);
@@ -92,7 +92,7 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.getUserId = (req, res, next) => {
   const { userId } = req.params;
-  
+
   User.findById(userId)
     .then((user) => {
       if (!user) {
