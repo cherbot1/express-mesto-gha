@@ -5,7 +5,7 @@ const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
 const NotFoundError = require('./utils/errors/NotFoundErr');
 const auth = require('./middlewares/auth');
-const error = require('./middlewares/error');
+const serverError = require('./middlewares/serverErr');
 const {
   createUser,
   login,
@@ -61,6 +61,6 @@ app.use('/*', () => {
 
 app.use(errors());
 
-app.use(error);
+app.use(serverError);
 
 app.listen(PORT);
