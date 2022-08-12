@@ -6,8 +6,8 @@
     "no-underscore-dangle": ["error", { "allow": ["_id"] }],
     "eol-last": 0,
     "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
-    "no-useless-escape": 0, /* для регулярки */
-    "linebreak-style": 0, /* для нормального оформления Joi */
-    "func-names": 0 /* чтобы убрать предупреждение об отсутствии названия функции в миддлваре auth */
+    "no-useless-escape": 0,
+    "linebreak-style": 0,
+    "func-names": 0
   }
 }

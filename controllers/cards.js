@@ -46,9 +46,16 @@ module.exports.deleteCard = (req, res, next) => {
       return Card.deleteOne(card)
         .then(() => {
           res.status(OK).send({ card });
-        });
+        })
+        .catch(next);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Некорректный запрос'));
+        return;
+      }
+      next(err);
+    });
 };
 
 module.exports.addLike = (req, res, next) => {
@@ -60,12 +67,14 @@ module.exports.addLike = (req, res, next) => {
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточки не существует'));
+        return;
       }
       res.status(OK).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Некорректный запрос'));
+        return;
       }
       next(err);
     });
@@ -79,13 +88,15 @@ module.exports.removeLike = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточки не существует');
+        next(new NotFoundError('Карточки не существует'));
+        return;
       }
       res.status(OK).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Некорректный запрос');
+        next(new BadRequestError('Некорректный запрос'));
+        return;
       }
       next(err);
     });

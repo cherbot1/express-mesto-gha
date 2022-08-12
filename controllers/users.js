@@ -33,6 +33,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
+        return;
       }
       res.status(OK).send({ data: user });
     })
@@ -75,9 +76,11 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректный запрос'));
+        return;
       }
       if (err.code === 11000) {
         next(new ConflictError('Пользователь уже существует'));
+        return;
       }
       next(err);
     });
@@ -90,10 +93,17 @@ module.exports.getUserId = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
+        return;
       }
       res.status(OK).send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Некорректный запрос'));
+        return;
+      }
+      next(err);
+    });
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -107,12 +117,14 @@ module.exports.updateUser = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
+        return;
       }
       res.status(OK).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректный запрос'));
+        return;
       }
       next(err);
     });
@@ -129,12 +141,14 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
+        return;
       }
       res.status(OK).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректный запрос'));
+        return;
       }
       next(err);
     });
