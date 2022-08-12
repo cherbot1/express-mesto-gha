@@ -49,9 +49,9 @@ app.post('/signup', celebrate({
       .required(),
   }),
 }), createUser);
-
+/*
 app.use(auth);
-
+*/
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
 
