@@ -91,14 +91,14 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getUserId = (req, res, next) => {
-  const { _id } = req.user;
+  const { userId } = req.params;
 
-  User.findById(_id)
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       }
-      res.status(OK).send(user);
+      res.status(OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
