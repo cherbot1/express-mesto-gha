@@ -66,11 +66,11 @@ module.exports.createUser = (req, res, next) => {
     }))
     .then((user) => {
       res.status(CREATED).send({
-        name: user[name],
-        about: user[about],
-        avatar: user[avatar],
-        email: user[email],
-        _id: user[_id],
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user._id,
       });
     })
     .catch((err) => {
