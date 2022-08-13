@@ -10,11 +10,12 @@ const {
 
 router.get('/', getCards);
 
-const celebrateParams = {params: Joi.object().keys({
+const celebrateParams = {
+  params: Joi.object().keys({
     cardId: Joi.string()
       .hex()
       .length(24),
-  })
+  }),
 };
 
 router.delete('/:cardId', celebrate(celebrateParams), deleteCard);
