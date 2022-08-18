@@ -10,13 +10,15 @@ const {
 
 router.get('/', getCards);
 
-router.delete('/:cardId', celebrate({
+const celebrateParams = {
   params: Joi.object().keys({
     cardId: Joi.string()
       .hex()
       .length(24),
   }),
-}), deleteCard);
+};
+
+router.delete('/:cardId', celebrate(celebrateParams), deleteCard);
 
 router.post('/', celebrate({
   body: Joi.object().keys({
@@ -30,18 +32,8 @@ router.post('/', celebrate({
   }),
 }), createCard);
 
-router.put('/:cardId/likes', celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string()
-      .length(24),
-  }),
-}), addLike);
+router.put('/:cardId/likes', celebrate(celebrateParams), addLike);
 
-router.delete('/:cardId/likes', celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string()
-      .length(24),
-  }),
-}), removeLike);
+router.delete('/:cardId/likes', celebrate(celebrateParams), removeLike);
 
 module.exports = router;
