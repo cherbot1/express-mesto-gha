@@ -10,6 +10,7 @@ const {
   createUser,
   login,
 } = require('./controllers/users');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,6 +22,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -58,6 +61,8 @@ app.use('/users', require('./routes/users'));
 app.use('/*', () => {
   throw new NotFoundError('Страницы не существует');
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 
